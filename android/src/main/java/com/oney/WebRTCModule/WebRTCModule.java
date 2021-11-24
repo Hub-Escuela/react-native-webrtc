@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 import org.webrtc.*;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
+import org.webrtc.voiceengine.WebRtcAudioUtils;
 
 @ReactModule(name = "WebRTCModule")
 public class WebRTCModule extends ReactContextBaseJavaModule {
@@ -120,7 +121,13 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
         }
 
         if (adm == null) {
-            adm = JavaAudioDeviceModule.builder(reactContext).createAudioDeviceModule();
+            adm = JavaAudioDeviceModule.builder(reactContext)
+                .setUseHardwareAcousticEchoCanceler(false)
+                .setUseHardwareNoiseSuppressor(false)
+                .createAudioDeviceModule();
+            WebRtcAudioUtils.setWebRtcBasedAcousticEchoCanceler(true);
+            WebRtcAudioUtils.setWebRtcBasedAutomaticGainControl(true);
+            WebRtcAudioUtils.setWebRtcBasedNoiseSuppressor(true);
         }
 
         mFactory
